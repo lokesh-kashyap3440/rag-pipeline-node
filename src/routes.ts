@@ -1,17 +1,21 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const pdf = require('pdf-parse')
-//import {PDFParse} from 'pdf-parse';
+const pdf = require('pdf-parse');
 import { ragService } from './services/ragService';
+import { visionService } from './services/visionService';
 
 const router = Router();
+// Use disk storage to save RAM on Render
 const upload = multer({ 
-    storage: multer.memoryStorage(),
-    limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+    dest: '/tmp/uploads/', // Render uses /tmp as ephemeral storage
+    limits: { fileSize: 50 * 1024 * 1024 } 
 });
 
 router.post('/ingest', async (req: Request, res: Response) => {
+// ... existing ingest code ...
   try {
     const { text, metadata } = req.body;
     if (!text) {
@@ -26,13 +30,15 @@ router.post('/ingest', async (req: Request, res: Response) => {
   }
 });
 
-import { visionService } from './services/visionService';
-
 router.post('/ingest-file', upload.single('file'), async (req: Request, res: Response) => {
+    let filePath = '';
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'File is required' });
         }
+        
+        filePath = req.file.path;
+        console.log(`Processing file: ${req.file.originalname} (Size: ${req.file.size})`);
 
         let text = '';
         const metadata = {
@@ -41,32 +47,39 @@ router.post('/ingest-file', upload.single('file'), async (req: Request, res: Res
             mimetype: req.file.mimetype
         };
 
+        // Read file buffer from disk
+        const fileBuffer = fs.readFileSync(filePath);
+
         const useOcr = req.query.ocr === 'true';
 
         if (useOcr && req.file.mimetype === 'application/pdf') {
-             // Use Vision/OCR Path
-             text = await visionService.extractTextWithVision(req.file.buffer);
+             text = await visionService.extractTextWithVision(fileBuffer);
         } else if (req.file.mimetype === 'application/pdf') {
-            // Standard Text Extraction
-            const data = await pdf(req.file.buffer);
+            const data = await pdf(fileBuffer);
             text = data.text;
-            
-            // Heuristic: If text is too short but file is large, it might be scanned.
-            // Fallback could be implemented here.
         } else {
-             // Fallback for text files
-            text = req.file.buffer.toString('utf-8');
+            text = fileBuffer.toString('utf-8');
         }
 
         if (!text.trim()) {
+             // Cleanup before return
+             fs.unlinkSync(filePath);
              return res.status(400).json({ error: 'Could not extract text from file' });
         }
 
         const result = await ragService.ingestText(text, metadata);
+        
+        // Cleanup success
+        fs.unlinkSync(filePath);
+        
         res.json(result);
 
     } catch (error: any) {
         console.error('File ingest error:', error);
+        // Cleanup error
+        if (filePath && fs.existsSync(filePath)) {
+            try { fs.unlinkSync(filePath); } catch (e) { /* ignore */ }
+        }
         res.status(500).json({ error: error.message });
     }
 });
