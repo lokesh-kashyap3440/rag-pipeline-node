@@ -17,6 +17,10 @@ export class RagService {
     });
   }
 
+  async init() {
+    await chromaService.init();
+  }
+
   async ingestText(text: string, metadata: any = {}) {
     const splitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
