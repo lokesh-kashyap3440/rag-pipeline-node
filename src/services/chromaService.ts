@@ -33,19 +33,31 @@ export class ChromaService {
     if (client) {
       chromaOptions.index = client; // LangChain uses 'index' for the client instance
     } else {
+      console.log(`[ChromaService] Connecting to Chroma at: ${config.chromaUrl}`);
       chromaOptions.url = config.chromaUrl;
     }
 
-    this.vectorStore = await Chroma.fromExistingCollection(
-      this.embeddings,
-      chromaOptions
-    ).catch(async () => {
-       return new Chroma(this.embeddings, chromaOptions);
-    });
+    try {
+      this.vectorStore = await Chroma.fromExistingCollection(
+        this.embeddings,
+        chromaOptions
+      );
+      console.log(`[ChromaService] Successfully connected to existing collection: ${config.collectionName}`);
+    } catch (error: any) {
+       console.warn(`[ChromaService] Could not connect to existing collection, attempting to create new one. Error: ${error.message}`);
+       try {
+         this.vectorStore = new Chroma(this.embeddings, chromaOptions);
+         console.log(`[ChromaService] Initialized new Chroma collection: ${config.collectionName}`);
+       } catch (innerError: any) {
+         console.error(`[ChromaService] FATAL: Failed to initialize Chroma: ${innerError.message}`);
+         throw innerError;
+       }
+    }
   }
 
   async getVectorStore(): Promise<Chroma> {
     if (!this.vectorStore) {
+        console.log(`[ChromaService] vectorStore not initialized. Initializing now...`);
         let client: any = null;
 
         if (config.chromaApiKey) {
@@ -63,10 +75,17 @@ export class ChromaService {
         if (client) {
           chromaOptions.index = client;
         } else {
+          console.log(`[ChromaService] Connecting to Chroma at: ${config.chromaUrl}`);
           chromaOptions.url = config.chromaUrl;
         }
 
-        this.vectorStore = new Chroma(this.embeddings, chromaOptions);
+        try {
+          this.vectorStore = new Chroma(this.embeddings, chromaOptions);
+          console.log(`[ChromaService] Vector store initialized.`);
+        } catch (error: any) {
+          console.error(`[ChromaService] Failed to initialize vector store: ${error.message}`);
+          throw error;
+        }
     }
     return this.vectorStore;
   }

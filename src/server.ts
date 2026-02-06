@@ -3,6 +3,7 @@ import cors from 'cors';
 import { config } from './config';
 import router from './routes';
 import { ragService } from './services/ragService';
+import { chromaService } from './services/chromaService';
 
 const app = express();
 
@@ -18,10 +19,21 @@ app.use((req, res, next) => {
 
 app.use('/api', router);
 
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
   const memoryUsage = process.memoryUsage();
+  
+  let chromaStatus = 'unknown';
+  try {
+    const store = await chromaService.getVectorStore();
+    // Simple ping-like check if possible, or just check if store exists
+    chromaStatus = store ? 'connected' : 'not_initialized';
+  } catch (e: any) {
+    chromaStatus = `error: ${e.message}`;
+  }
+
   res.json({ 
     status: 'ok',
+    chroma: chromaStatus,
     memory: {
       rss: `${Math.round(memoryUsage.rss / 1024 / 1024)} MB`,
       heapTotal: `${Math.round(memoryUsage.heapTotal / 1024 / 1024)} MB`,
@@ -49,6 +61,11 @@ async function startServer() {
     app.listen(config.port, () => {
       console.log(`🚀 Server running on port ${config.port}`);
       console.log(`Environment: Groq API Key present: ${!!config.groqApiKey}`);
+      console.log(`Environment: Chroma URL: ${config.chromaUrl}`);
+      console.log(`Environment: Chroma API Key present: ${!!config.chromaApiKey}`);
+      console.log(`Environment: Chroma Tenant: ${config.chromaTenant}`);
+      console.log(`Environment: Chroma Database: ${config.chromaDatabase}`);
+      console.log(`Environment: Node Version: ${process.version}`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);

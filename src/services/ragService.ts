@@ -33,13 +33,18 @@ export class RagService {
   }
 
   async query(question: string) {
+    console.log(`[RagService] Processing query: "${question}"`);
+    
     // 1. Retrieve relevant documents
+    console.log(`[RagService] Searching for relevant documents...`);
     const relevantDocs = await chromaService.similaritySearch(question);
+    console.log(`[RagService] Found ${relevantDocs.length} relevant documents.`);
     
     // 2. Contextualize
     const context = relevantDocs.map((doc) => doc.pageContent).join("\n\n---\n\n");
 
     // 3. Generate Answer
+    console.log(`[RagService] Generating answer with LLM...`);
     const prompt = ChatPromptTemplate.fromMessages([
       ["system", "You are a helpful assistant. Use the following pieces of context to answer the user's question. If you don't know the answer, just say that you don't know, don't try to make up an answer."],
       ["system", "Context:\n{context}"],
@@ -48,15 +53,21 @@ export class RagService {
 
     const chain = prompt.pipe(this.llm).pipe(new StringOutputParser());
 
-    const answer = await chain.invoke({
-      context,
-      question,
-    });
+    try {
+      const answer = await chain.invoke({
+        context,
+        question,
+      });
+      console.log(`[RagService] Answer generated successfully.`);
 
-    return {
-      answer,
-      sources: relevantDocs.map((doc) => doc.metadata),
-    };
+      return {
+        answer,
+        sources: relevantDocs.map((doc) => doc.metadata),
+      };
+    } catch (error: any) {
+      console.error(`[RagService] LLM Generation error: ${error.message}`);
+      throw error;
+    }
   }
 }
 
