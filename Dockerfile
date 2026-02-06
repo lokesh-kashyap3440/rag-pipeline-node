@@ -21,6 +21,9 @@ COPY . .
 # Build TypeScript
 RUN npm run build
 
+# Ensure permissions for the non-root user
+RUN chown -R pptruser:pptruser /app
+
 # Switch back to the non-root user provided by the image
 USER pptruser
 

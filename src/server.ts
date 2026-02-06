@@ -3,7 +3,6 @@ console.log(`[System] Node version: ${process.version}`);
 console.log(`[System] Memory limit (if any): ${process.env.WEB_MEMORY || 'unlimited'}`);
 
 import express, { Request, Response, NextFunction } from 'express';
-// ... rest of imports
 import cors from 'cors';
 import { config } from './config';
 import router from './routes';
