@@ -1,4 +1,9 @@
+console.log('[System] Process starting...');
+console.log(`[System] Node version: ${process.version}`);
+console.log(`[System] Memory limit (if any): ${process.env.WEB_MEMORY || 'unlimited'}`);
+
 import express, { Request, Response, NextFunction } from 'express';
+// ... rest of imports
 import cors from 'cors';
 import { config } from './config';
 import router from './routes';
@@ -6,6 +11,7 @@ import { ragService } from './services/ragService';
 import { chromaService } from './services/chromaService';
 
 const app = express();
+// ... rest of file
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));

@@ -18,7 +18,13 @@ export class RagService {
   }
 
   async init() {
+    const memBefore = process.memoryUsage().heapUsed / 1024 / 1024;
+    console.log(`[RagService] Starting initialization (Memory: ${Math.round(memBefore)} MB)...`);
+    
     await chromaService.init();
+    
+    const memAfter = process.memoryUsage().heapUsed / 1024 / 1024;
+    console.log(`[RagService] Initialization complete (Memory: ${Math.round(memAfter)} MB).`);
   }
 
   async ingestText(text: string, metadata: any = {}) {
