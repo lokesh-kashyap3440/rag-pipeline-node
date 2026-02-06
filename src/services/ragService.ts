@@ -28,14 +28,24 @@ export class RagService {
   }
 
   async ingestText(text: string, metadata: any = {}) {
+    console.log(`[RagService] Ingesting text (Length: ${text.length})...`);
     const splitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
       chunkOverlap: 200,
     });
 
+    console.log(`[RagService] Splitting text into chunks...`);
     const docs = await splitter.createDocuments([text], [metadata]);
-    await chromaService.addDocuments(docs);
-    return { success: true, chunks: docs.length };
+    console.log(`[RagService] Created ${docs.length} chunks. Adding to Chroma...`);
+    
+    try {
+      await chromaService.addDocuments(docs);
+      console.log(`[RagService] Successfully added documents to Chroma.`);
+      return { success: true, chunks: docs.length };
+    } catch (error: any) {
+      console.error(`[RagService] Error adding documents to Chroma: ${error.message}`);
+      throw error;
+    }
   }
 
   async query(question: string) {

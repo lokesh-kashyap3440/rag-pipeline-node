@@ -53,21 +53,29 @@ router.post('/ingest-file', upload.single('file'), async (req: Request, res: Res
         const useOcr = req.query.ocr === 'true';
 
         if (useOcr && req.file.mimetype === 'application/pdf') {
+             console.log('[IngestFile] Using OCR (VisionService)...');
              text = await visionService.extractTextWithVision(fileBuffer);
         } else if (req.file.mimetype === 'application/pdf') {
+            console.log('[IngestFile] Using standard PDF parser...');
             const data = await pdf(fileBuffer);
             text = data.text;
         } else {
+            console.log(`[IngestFile] Reading file as plain text (${req.file.mimetype})...`);
             text = fileBuffer.toString('utf-8');
         }
 
+        console.log(`[IngestFile] Extracted ${text.length} characters.`);
+
         if (!text.trim()) {
+             console.error('[IngestFile] Extracted text is empty.');
              // Cleanup before return
              fs.unlinkSync(filePath);
              return res.status(400).json({ error: 'Could not extract text from file' });
         }
 
+        console.log('[IngestFile] Starting RAG ingestion...');
         const result = await ragService.ingestText(text, metadata);
+        console.log('[IngestFile] Ingestion successful.');
         
         // Cleanup success
         fs.unlinkSync(filePath);
