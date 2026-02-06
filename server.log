@@ -1,0 +1,20 @@
+
+> rag-pipeline-node@1.0.0 start
+> node dist/server.js
+
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+Initializing RAG Service...
+[ChromaService] Initializing CloudClient for tenant: d763e502-0999-4d55-9e80-6b54ce4fa12b
+No embedding function configuration found for collection schema deserialization. 'add' and 'query' will fail unless you provide them embeddings directly.
+No embedding function configuration found for collection schema deserialization. 'add' and 'query' will fail unless you provide them embeddings directly.
+No embedding function configuration found for collection rag-collection. 'add' and 'query' will fail unless you provide them embeddings directly.
+[ChromaService] Successfully connected to existing collection: rag-collection
+✅ RAG Service Initialized (ChromaDB connected)
+🚀 Server running on port 3000
+Environment: Groq API Key present: true
+Environment: Chroma URL: http://localhost:8000
+Environment: Chroma API Key present: true
+Environment: Chroma Tenant: d763e502-0999-4d55-9e80-6b54ce4fa12b
+Environment: Chroma Database: chroma
+Environment: Node Version: v22.22.0
+[2026-02-06T11:45:31.564Z] GET /health
