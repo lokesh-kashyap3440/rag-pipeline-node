@@ -15,6 +15,7 @@
   "type": "commonjs",
   "dependencies": {
     "@chroma-core/default-embed": "^0.1.9",
+    "@huggingface/inference": "^4.13.11",
     "@huggingface/transformers": "^3.8.1",
     "@langchain/community": "^1.1.11",
     "@langchain/core": "^1.1.19",

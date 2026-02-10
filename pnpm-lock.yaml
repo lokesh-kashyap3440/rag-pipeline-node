@@ -11,12 +11,15 @@ importers:
       '@chroma-core/default-embed':
         specifier: ^0.1.9
         version: 0.1.9
+      '@huggingface/inference':
+        specifier: ^4.13.11
+        version: 4.13.11
       '@huggingface/transformers':
         specifier: ^3.8.1
         version: 3.8.1
       '@langchain/community':
         specifier: ^1.1.11
-        version: 1.1.13(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.58.2)(deepmerge@4.3.1)(dotenv@17.2.4)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(zod@4.3.6))(@huggingface/transformers@3.8.1)(@ibm-cloud/watsonx-ai@1.7.7)(@langchain/core@1.1.20(openai@6.19.0(ws@8.19.0)(zod@4.3.6)))(@xenova/transformers@2.17.2)(chromadb@3.3.0)(ibm-cloud-sdk-core@5.4.6)(jsonwebtoken@9.0.3)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(pdf-parse@1.1.4)(playwright@1.58.2)(puppeteer@24.37.2(typescript@5.9.3))(ws@8.19.0)
+        version: 1.1.13(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.58.2)(deepmerge@4.3.1)(dotenv@17.2.4)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(zod@4.3.6))(@huggingface/inference@4.13.11)(@huggingface/transformers@3.8.1)(@ibm-cloud/watsonx-ai@1.7.7)(@langchain/core@1.1.20(openai@6.19.0(ws@8.19.0)(zod@4.3.6)))(@xenova/transformers@2.17.2)(chromadb@3.3.0)(ibm-cloud-sdk-core@5.4.6)(jsonwebtoken@9.0.3)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(pdf-parse@1.1.4)(playwright@1.58.2)(puppeteer@24.37.2(typescript@5.9.3))(ws@8.19.0)
       '@langchain/core':
         specifier: ^1.1.19
         version: 1.1.20(openai@6.19.0(ws@8.19.0)(zod@4.3.6))
@@ -128,6 +131,10 @@ packages:
   '@emnapi/runtime@1.8.1':
     resolution: {integrity: sha512-mehfKSMWjjNol8659Z8KxEMrdSJDDot5SXMq00dM8BN4o+CLNXQ0xH2V7EchNHV4RmbZLmmPdEaXZc5H2FXmDg==}
 
+  '@huggingface/inference@4.13.11':
+    resolution: {integrity: sha512-wygYsdlDIVNTBPyaGTuzqtotZOP6C9jsZ4AmXC06B5nGEs3IrwSQ9xp1Aa2cJylQYs3/y2BGN4gudsS+HV2v5w==}
+    engines: {node: '>=18'}
+
   '@huggingface/jinja@0.2.2':
     resolution: {integrity: sha512-/KPde26khDUIPkTGU82jdtTW9UAuvUTumCAbFs/7giR0SxsvZC4hru51PBvpijH6BVkHcROcvZM/lpy5h1jRRA==}
     engines: {node: '>=18'}
@@ -135,6 +142,9 @@ packages:
   '@huggingface/jinja@0.5.5':
     resolution: {integrity: sha512-xRlzazC+QZwr6z4ixEqYHo9fgwhTZ3xNSdljlKfUFGZSdlvt166DljRELFUfFytlYOYvo3vTisA/AFOuOAzFQQ==}
     engines: {node: '>=18'}
+
+  '@huggingface/tasks@0.19.83':
+    resolution: {integrity: sha512-nBt3S6x+MWUTmfey1drQZRMuEopEbz2aEMUsoddfpCuzIYAMCsJDX7xeNuJnzvbVGis3gXXCRcLHVhFtHaaiyA==}
 
   '@huggingface/transformers@3.8.1':
     resolution: {integrity: sha512-tsTk4zVjImqdqjS8/AOZg2yNLd1z9S5v+7oUPpXaasDRwEDhB+xnglK1k5cad26lL5/ZIaeREgWWy0bs9y9pPA==}
@@ -2472,9 +2482,16 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
+  '@huggingface/inference@4.13.11':
+    dependencies:
+      '@huggingface/jinja': 0.5.5
+      '@huggingface/tasks': 0.19.83
+
   '@huggingface/jinja@0.2.2': {}
 
   '@huggingface/jinja@0.5.5': {}
+
+  '@huggingface/tasks@0.19.83': {}
 
   '@huggingface/transformers@3.8.1':
     dependencies:
@@ -2622,7 +2639,7 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/community@1.1.13(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.58.2)(deepmerge@4.3.1)(dotenv@17.2.4)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(zod@4.3.6))(@huggingface/transformers@3.8.1)(@ibm-cloud/watsonx-ai@1.7.7)(@langchain/core@1.1.20(openai@6.19.0(ws@8.19.0)(zod@4.3.6)))(@xenova/transformers@2.17.2)(chromadb@3.3.0)(ibm-cloud-sdk-core@5.4.6)(jsonwebtoken@9.0.3)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(pdf-parse@1.1.4)(playwright@1.58.2)(puppeteer@24.37.2(typescript@5.9.3))(ws@8.19.0)':
+  '@langchain/community@1.1.13(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.58.2)(deepmerge@4.3.1)(dotenv@17.2.4)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(zod@4.3.6))(@huggingface/inference@4.13.11)(@huggingface/transformers@3.8.1)(@ibm-cloud/watsonx-ai@1.7.7)(@langchain/core@1.1.20(openai@6.19.0(ws@8.19.0)(zod@4.3.6)))(@xenova/transformers@2.17.2)(chromadb@3.3.0)(ibm-cloud-sdk-core@5.4.6)(jsonwebtoken@9.0.3)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(pdf-parse@1.1.4)(playwright@1.58.2)(puppeteer@24.37.2(typescript@5.9.3))(ws@8.19.0)':
     dependencies:
       '@browserbasehq/stagehand': 1.14.0(@playwright/test@1.58.2)(deepmerge@4.3.1)(dotenv@17.2.4)(openai@6.19.0(ws@8.19.0)(zod@4.3.6))(zod@4.3.6)
       '@ibm-cloud/watsonx-ai': 1.7.7
@@ -2639,6 +2656,7 @@ snapshots:
       zod: 4.3.6
     optionalDependencies:
       '@browserbasehq/sdk': 2.6.0
+      '@huggingface/inference': 4.13.11
       '@huggingface/transformers': 3.8.1
       '@xenova/transformers': 2.17.2
       chromadb: 3.3.0
