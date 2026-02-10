@@ -13,7 +13,7 @@ COPY package*.json ./
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
-RUN npm ci --legacy-peer-deps
+RUN npm i --legacy-peer-deps
 
 # Copy source code
 COPY . .
