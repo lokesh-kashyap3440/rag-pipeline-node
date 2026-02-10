@@ -1,6 +1,0 @@
-ignoredBuiltDependencies:
-  - onnxruntime-node
-  - protobufjs
-  - puppeteer
-  - sharp
-strictPeerDependencies: false
