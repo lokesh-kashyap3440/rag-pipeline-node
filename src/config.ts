@@ -8,7 +8,8 @@ export const config = {
   chromaApiKey: process.env.CHROMA_API_KEY || '', // Added for Cloud
   chromaTenant: process.env.CHROMA_TENANT || 'default_tenant',
   chromaDatabase: process.env.CHROMA_DATABASE || 'default_database',
-  collectionName: 'rag-collection'
+  collectionName: 'rag-collection', // Default collection name for Chroma
+  hfApiKey: process.env.HF_API_KEY || '' // Added for Hugging Face Inference API
 };
 
 if (!config.groqApiKey) {

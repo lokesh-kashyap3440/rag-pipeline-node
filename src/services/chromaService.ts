@@ -1,16 +1,17 @@
 import { Chroma } from "@langchain/community/vectorstores/chroma";
-import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/huggingface_transformers";
+import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { CloudClient, ChromaClient } from "chromadb";
 import { config } from "../config";
 
 export class ChromaService {
   private vectorStore: Chroma | null = null;
-  private embeddings: HuggingFaceTransformersEmbeddings;
+  private embeddings: HuggingFaceInferenceEmbeddings;
 
   constructor() {
-    // Use a small, efficient local model
-    this.embeddings = new HuggingFaceTransformersEmbeddings({
-      model: "Xenova/all-MiniLM-L6-v2",
+    // Use Hugging Face Inference API for embeddings to avoid local runtime/backends issues
+    this.embeddings = new HuggingFaceInferenceEmbeddings({
+      model: "sentence-transformers/all-MiniLM-L6-v2",
+      apiKey: config.hfApiKey
     });
   }
 
