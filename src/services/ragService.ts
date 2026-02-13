@@ -12,7 +12,7 @@ export class RagService {
   constructor() {
     this.llm = new ChatGroq({
       apiKey: config.groqApiKey,
-      model: "llama-3.1-8b-instant", // Updated supported model
+      model: "llama-3.3-70b-versatile", // Updated supported model
       temperature: 0,
     });
   }
